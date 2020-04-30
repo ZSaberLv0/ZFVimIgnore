@@ -96,3 +96,7 @@ let g:ZFIgnoreOptionDefault['YourOwnType'] = 0
     see also:
     https://support.microsoft.com/en-us/help/830473/command-prompt-cmd-exe-command-line-string-limitation
 
+    to resolve this, try use a temp file to store exclude pattern, for example
+
+    * use `--exclude-from` (for GNU `grep` only)
+
