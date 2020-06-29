@@ -6,6 +6,15 @@ endif
 if !exists('g:ZFIgnoreOptionDefault')
     let g:ZFIgnoreOptionDefault = {}
 endif
+if !exists("g:ZFIgnoreOptionDefault['common']")
+    let g:ZFIgnoreOptionDefault['common'] = 1
+endif
+if !exists("g:ZFIgnoreOptionDefault['bin']")
+    let g:ZFIgnoreOptionDefault['bin'] = 1
+endif
+if !exists("g:ZFIgnoreOptionDefault['media']")
+    let g:ZFIgnoreOptionDefault['media'] = 1
+endif
 if !exists("g:ZFIgnoreOptionDefault['hidden']")
     let g:ZFIgnoreOptionDefault['hidden'] = 1
 endif
@@ -20,6 +29,7 @@ let g:ZFIgnoreData['ZFVimIgnore_ignore_common'] = {
             \       '*.depend*' : 1,
             \       '*.iml' : 1,
             \       '*.meta' : 1,
+            \       '*.pyc' : 1,
             \       '*.swp' : 1,
             \       '*.user' : 1,
             \       '.DS_Store' : 1,
@@ -43,6 +53,7 @@ let g:ZFIgnoreData['ZFVimIgnore_ignore_common'] = {
             \       '.vscode' : 1,
             \       '.wing' : 1,
             \       'Pods' : 1,
+            \       '__pycache__' : 1,
             \       '_build' : 1,
             \       '_cache' : 1,
             \       '_release' : 1,

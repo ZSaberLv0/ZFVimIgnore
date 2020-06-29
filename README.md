@@ -66,6 +66,13 @@ let g:NERDTreeIgnore = ZFIgnoreToRegexp(ZFIgnoreGet({
 # For impl to extend ignore detect
 
 ```
+" for impl
+if !exists('g:ZFIgnoreOptionDefault')
+    let g:ZFIgnoreOptionDefault = {}
+endif
+if !exists("g:ZFIgnoreOptionDefault['YourOwnType']")
+    let g:ZFIgnoreOptionDefault['YourOwnType'] = 1
+endif
 autocmd User ZFIgnoreOnSetup call YourSetup()
 function! YourSetup()
     " directly update to g:ZFIgnoreData
@@ -77,7 +84,10 @@ function! YourSetup()
             \   'YourOwnType' : {...},
             \ }
 endfunction
+```
 
+```
+" for users
 " ignore can be enable/disable by module
 let ignore = ZFIgnoreGet({'YourOwnType' : 1})
 " or add default option
