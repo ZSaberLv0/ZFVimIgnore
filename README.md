@@ -35,7 +35,11 @@ if you like my work, [check here](https://github.com/ZSaberLv0?utf8=%E2%9C%93&ta
     :ZFIgnoreRemove build
     ```
 
-    for supported patterns, see `:h wildcards`
+    supported patterns:
+
+    * see `:h wildcards`
+    * supported: `?` `*` `[abc]`
+    * not supported: `**` `*/`
 
 1. or completely enable or disable by `:ZFIgnoreToggle`
 
