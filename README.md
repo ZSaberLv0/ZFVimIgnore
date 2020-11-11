@@ -25,10 +25,12 @@ or [buy me a coffee](https://github.com/ZSaberLv0/ZSaberLv0)
             \ }))
     ```
 
-1. by default:
+    by default:
+
     * some common ignore are added
     * `.gitignore` under current dir would be recognized
     * `wildignore` would be applied automatically
+
 1. you may add or remove custom ignore at runtime
 
     ```
@@ -42,7 +44,7 @@ or [buy me a coffee](https://github.com/ZSaberLv0/ZSaberLv0)
     * supported: `?` `*` `[abc]`
     * not supported: `**` `*/`
 
-1. or completely enable or disable by `:ZFIgnoreToggle`
+    or completely enable or disable by `:ZFIgnoreToggle`
 
 
 # Typical config
@@ -67,36 +69,71 @@ let g:NERDTreeIgnore = ZFIgnoreToRegexp(ZFIgnoreGet({
         \ }))
 ```
 
+# Ignore options
 
-# For impl to extend ignore detect
+we have some builtin ignore options, and all of them are enabled by default:
+
+* `bin` : binary files
+* `common` : common files
+* `gitignore` : according to `.gitignore` under `getcwd()`
+* `hidden` : hidden files
+* `media` : common media files
+
+all currently registered option can be checked and modified by `g:ZFIgnoreOptionDefault`
+
+you can also supply custom ignore options, see below
+
+
+# For impl to extend ignore options
+
+for impl:
 
 ```
-" for impl
+" declare your option and default value
 if !exists('g:ZFIgnoreOptionDefault')
     let g:ZFIgnoreOptionDefault = {}
 endif
-if !exists("g:ZFIgnoreOptionDefault['YourOwnType']")
-    let g:ZFIgnoreOptionDefault['YourOwnType'] = 1
+if !exists("g:ZFIgnoreOptionDefault['YourOptionName']")
+    let g:ZFIgnoreOptionDefault['YourOptionName'] = 1
 endif
+
+" if the ignore item is simple
+if !exists('g:ZFIgnoreData')
+    let g:ZFIgnoreData = {}
+endif
+let g:ZFIgnoreData['YourImplName'] = {
+        \   'common' : {
+        \       'file' : {'*.obj':1, '*.bin':1},
+        \       'dir' : {'build':1},
+        \   },
+        \   'YourOptionName' : {...},
+        \ }
+
+" if you want to implement more complex ignore detect at runtime
 autocmd User ZFIgnoreOnSetup call YourSetup()
 function! YourSetup()
-    " directly update to g:ZFIgnoreData
-    let g:ZFIgnoreData['YourModule'] = {
+    let g:ZFIgnoreData['YourImplName'] = {
             \   'common' : {
             \       'file' : {'*.obj':1, '*.bin':1},
             \       'dir' : {'build':1},
             \   },
-            \   'YourOwnType' : {...},
+            \   'YourOptionName' : {...},
             \ }
 endfunction
 ```
 
+for users:
+
 ```
-" for users
-" ignore can be enable/disable by module
-let ignore = ZFIgnoreGet({'YourOwnType' : 1})
-" or add default option
-let g:ZFIgnoreOptionDefault['YourOwnType'] = 0
+" access ignore data as usual
+let ignore = ZFIgnoreGet()
+
+" or enable/disable by option name
+let ignore = ZFIgnoreGet({'YourOptionName' : 1})
+
+" or change default option
+let g:ZFIgnoreOptionDefault['YourOptionName'] = 0
+let ignore = ZFIgnoreGet()
 ```
 
 
