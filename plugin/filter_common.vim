@@ -1,5 +1,5 @@
 
-if !get(g:, 'ZFVimIgnore_filter_common', 1)
+if !get(g:, 'ZFIgnore_filter_common', 1)
     finish
 endif
 
@@ -8,7 +8,7 @@ endif
 " * `~` or user directory is ignored
 " * vim's rtp is ignored
 
-function! ZFVimIgnore_filter_common(ignore)
+function! ZFIgnore_filter_common(ignore)
     let filterMap = {}
     let filterMap['~'] = 1
     for item in split(substitute($HOME, '\\', '/', 'g'), '/')
@@ -38,7 +38,7 @@ endfunction
 if !exists('g:ZFIgnoreFilter')
     let g:ZFIgnoreFilter = {}
 endif
-let g:ZFIgnoreFilter['path'] = function('ZFVimIgnore_filter_common')
+let g:ZFIgnoreFilter['path'] = function('ZFIgnore_filter_common')
 
 function! s:check(filter, pattern)
     let pattern = ZFIgnorePatternToRegexp(a:pattern)

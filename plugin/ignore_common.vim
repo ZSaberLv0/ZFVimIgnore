@@ -1,5 +1,5 @@
 
-if !get(g:, 'ZFVimIgnore_ignore_common', 1)
+if !get(g:, 'ZFIgnore_ignore_common', 1)
     finish
 endif
 
@@ -22,7 +22,7 @@ endif
 if !exists('g:ZFIgnoreData')
     let g:ZFIgnoreData = {}
 endif
-let g:ZFIgnoreData['ZFVimIgnore_ignore_common'] = {
+let g:ZFIgnoreData['ZFIgnore_ignore_common'] = {
             \   'common' : {
             \     'file' : {
             \       '*.d' : 1,

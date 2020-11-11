@@ -1,5 +1,5 @@
 
-augroup ZFVimIgnore_augroup
+augroup ZFIgnore_augroup
     autocmd!
     autocmd User ZFIgnoreOnSetup silent
     autocmd User ZFIgnoreOnUpdate silent

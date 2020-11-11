@@ -1,5 +1,5 @@
 
-if !get(g:, 'ZFVimIgnore_ignore_gitignore', 1)
+if !get(g:, 'ZFIgnore_ignore_gitignore', 1)
     finish
 endif
 
@@ -10,7 +10,7 @@ if !exists("g:ZFIgnoreOptionDefault['gitignore']")
     let g:ZFIgnoreOptionDefault['gitignore'] = 1
 endif
 
-augroup ZFVimIgnore_ignore_gitignore_augroup
+augroup ZFIgnore_ignore_gitignore_augroup
     autocmd!
     if exists('##DirChanged')
         autocmd DirChanged * call ZFIgnoreUpdate()
@@ -22,7 +22,7 @@ function! ZFIgnoreLoadGitignore(option)
         return {}
     endif
 
-    if get(g:, 'ZFVimIgnore_ignore_gitignore_findRecursive', 0)
+    if get(g:, 'ZFIgnore_ignore_gitignore_findRecursive', 0)
         let pattern = '**/.gitignore'
     else
         let pattern = '.gitignore'
@@ -71,5 +71,5 @@ endfunction
 if !exists('g:ZFIgnoreData')
     let g:ZFIgnoreData = {}
 endif
-let g:ZFIgnoreData['ZFVimIgnore_ignore_gitignore'] = function('ZFIgnoreLoadGitignore')
+let g:ZFIgnoreData['ZFIgnore_ignore_gitignore'] = function('ZFIgnoreLoadGitignore')
 
