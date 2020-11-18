@@ -6,11 +6,16 @@ endif
 " some werid thing would happen if:
 " * cwd or cwd's parent is ignored
 " * `~` or user directory is ignored
+" * special patterns: `.` `*`
 " * vim's rtp is ignored
 
 function! ZFIgnore_filter_common(ignore)
     let filterMap = {}
     let filterMap['~'] = 1
+    let filterMap['.'] = 1
+    let filterMap['..'] = 1
+    let filterMap['*'] = 1
+    let filterMap['**'] = 1
     for item in split(substitute($HOME, '\\', '/', 'g'), '/')
         let filterMap[item] = 1
     endfor

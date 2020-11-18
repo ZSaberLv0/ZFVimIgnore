@@ -36,7 +36,7 @@ function! ZFIgnoreLoadGitignore(option)
                         \ || match(pattern, '^[ \t]*!') >= 0
                 continue
             endif
-            let pattern = substitute(pattern, ' *#.*', '', 'g')
+            let pattern = substitute(pattern, '^[ \t]*#.*', '', 'g')
             let pattern = substitute(pattern, '^[ \t]+', '', 'g')
             let pattern = substitute(pattern, '[ \t]+$', '', 'g')
             if empty(pattern)
