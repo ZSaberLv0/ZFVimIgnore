@@ -27,6 +27,7 @@ let g:ZFIgnoreData['ZFIgnore_ignore_common'] = {
             \     'file' : {
             \       '*.d' : 1,
             \       '*.depend*' : 1,
+            \       '*.dex' : 1,
             \       '*.iml' : 1,
             \       '*.meta' : 1,
             \       '*.pyc' : 1,
