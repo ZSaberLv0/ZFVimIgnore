@@ -27,7 +27,7 @@ function! ZFIgnoreLoadGitignore(option)
                 \ }
     let pathList = ZFIgnoreDetectGitignore()
     for path in pathList
-        call ZFIgnoreParseGitignore(file, d)
+        call ZFIgnoreParseGitignore(ignoreData, path)
     endfor
     return ignoreData
 endfunction
