@@ -102,14 +102,8 @@ let g:ZFIgnoreData['ZFIgnore_ignore_common'] = {
             \   },
             \   'hidden' : {
             \     'file' : {
-            \       '.*' : 1,
-            \       '_*' : 1,
             \       '*~' : 1,
             \       '~*' : 1,
-            \     },
-            \     'dir' : {
-            \       '.*' : 1,
-            \       '_*' : 1,
             \     },
             \   },
             \ }
