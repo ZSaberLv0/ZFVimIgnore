@@ -79,30 +79,33 @@ function! ZFIgnoreParseGitignore(ignoreData, gitignoreFilePath)
                     \ || match(pattern, '^[ \t]*!') >= 0
             continue
         endif
+
+        " comments: `# xxx`
         let pattern = substitute(pattern, '^[ \t]*#.*', '', 'g')
+
+        " head or tail spaces
         let pattern = substitute(pattern, '^[ \t]+', '', 'g')
         let pattern = substitute(pattern, '[ \t]+$', '', 'g')
+
+        " no abs path support
+        "   `*/path/abc` => `path/abc`
+        "   `/path/abc` => `path/abc`
+        let pattern = substitute(pattern, '^\**\/\+', '', 'g')
+
         if empty(pattern)
             continue
         endif
 
-        " no abs path support
-        let pattern = substitute(pattern, '^/*', '', 'g')
-
-        " explicit dir, `path/` or `path/*`
         if match(pattern, '/\+\**$') >= 0
+            " explicit dir, `path/` or `path/*`
             let pattern = substitute(pattern, '/\+\**$', '', 'g')
             if !empty(pattern)
                 let a:ignoreData['dir'][pattern] = 1
             endif
-            continue
+        else
+            let a:ignoreData['file'][pattern] = 1
+            let a:ignoreData['dir'][pattern] = 1
         endif
-
-        " `*/path/abc` to `path/abc`
-        let pattern = substitute(pattern, '^\*\+/\+', '', 'g')
-
-        let a:ignoreData['file'][pattern] = 1
-        let a:ignoreData['dir'][pattern] = 1
     endfor
 endfunction
 
