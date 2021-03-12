@@ -47,8 +47,8 @@ endif
 " return: {
 "   'file' : [],
 "   'dir' : [],
-"   'file_filtered' : [],
-"   'dir_filtered' : [],
+"   'file_filtered' : {},
+"   'dir_filtered' : {},
 " }
 function! ZFIgnoreGet(...)
     let option = get(a:, 1, {})
@@ -175,8 +175,8 @@ function! s:ZFIgnoreGet(option)
         return {
                     \   'file' : [],
                     \   'dir' : [],
-                    \   'file_filtered' : [],
-                    \   'dir_filtered' : [],
+                    \   'file_filtered' : {},
+                    \   'dir_filtered' : {},
                     \ }
     endif
 
@@ -222,8 +222,8 @@ function! s:ZFIgnoreGet(option)
     return {
                 \   'file' : fileRet,
                 \   'dir' : dirRet,
-                \   'file_filtered' : [],
-                \   'dir_filtered' : [],
+                \   'file_filtered' : {},
+                \   'dir_filtered' : {},
                 \ }
 endfunction
 

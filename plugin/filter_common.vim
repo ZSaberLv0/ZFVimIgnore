@@ -32,8 +32,10 @@ function! ZFIgnore_filter_common(ignore)
     for type in ['dir']
         let i = len(a:ignore[type]) - 1
         while i >= 0
-            if s:check(filter, a:ignore[type][i])
-                call add(a:ignore[type . '_filtered'], remove(a:ignore[type], i))
+            let filterIndex = s:checkFilter(filter, a:ignore[type][i])
+            if filterIndex >= 0
+                let pattern = remove(a:ignore[type], i)
+                let a:ignore[type . '_filtered'][pattern] = filter[filterIndex]
             endif
             let i -= 1
         endwhile
@@ -45,17 +47,20 @@ if !exists('g:ZFIgnoreFilter')
 endif
 let g:ZFIgnoreFilter['path'] = function('ZFIgnore_filter_common')
 
-function! s:check(filter, pattern)
+function! s:checkFilter(filter, pattern)
     let pattern = ZFIgnorePatternToRegexp(a:pattern)
     if empty(pattern)
-        return 0
+        return -1
     endif
     let pattern = '\c' . pattern
-    for item in a:filter
-        if match(item, pattern) >= 0
-            return 1
+    let i = 0
+    let iEnd = len(a:filter)
+    while i < iEnd
+        if match(a:filter[i], pattern) >= 0
+            return i
         endif
-    endfor
-    return 0
+        let i += 1
+    endwhile
+    return -1
 endfunction
 
