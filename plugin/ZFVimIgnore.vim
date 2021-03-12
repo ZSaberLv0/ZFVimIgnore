@@ -84,8 +84,8 @@ function! ZFIgnoreToWildignore(ignore)
     for t in a:ignore['dir']
         let t = substitute(t, ' ', '\\ ', 'g')
         call add(ret, t)
-        if match(t, '^\*\+/\+') < 0
-            call add(ret, '**/' . t)
+        if match(t, '^\*\+\/') < 0 && match(t, '\/\*\+$') < 0
+            call add(ret, '*/' . t . '/*')
         endif
     endfor
     return ret
