@@ -22,13 +22,15 @@ function! ZFIgnore_filter_common(ignore)
     for item in split(substitute(getcwd(), '\\', '/', 'g'), '/')
         let filterMap[item] = 1
     endfor
-    for rtp in split(&rtp, ',')
-        for item in split(substitute(rtp, '\\', '/', 'g'), '/')
-            let filterMap[item] = 1
+    if get(g:, 'ZFIgnore_filter_rtp', 0)
+        for rtp in split(&rtp, ',')
+            for item in split(substitute(rtp, '\\', '/', 'g'), '/')
+                let filterMap[item] = 1
+            endfor
         endfor
-    endfor
-    let filter = keys(filterMap)
+    endif
 
+    let filter = keys(filterMap)
     for type in ['dir']
         let i = len(a:ignore[type]) - 1
         while i >= 0
