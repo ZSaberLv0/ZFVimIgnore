@@ -33,7 +33,13 @@ if !exists('g:ZFIgnoreOptionDefault')
 endif
 
 " {
-"   'module' : 'function({file:[], dir:[]}) to add or remove final ignore settings'
+"   'module' : 'function(ignore)', // function to modify final ignore settings
+"                                  // ignore: {
+"                                  //   'file' : [],
+"                                  //   'dir' : [],
+"                                  //   'file_filtered' : [],
+"                                  //   'dir_filtered' : [],
+"                                  // }
 " }
 if !exists('g:ZFIgnoreFilter')
     let g:ZFIgnoreFilter = {}

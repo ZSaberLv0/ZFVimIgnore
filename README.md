@@ -28,7 +28,7 @@ or [buy me a coffee](https://github.com/ZSaberLv0/ZSaberLv0)
     by default:
 
     * some common ignore are added
-    * `.gitignore` under current dir would be recognized
+    * `.gitignore` under current dir and all parent dirs would be recognized
     * `wildignore` would be applied automatically
 
 1. you may add or remove custom ignore at runtime
@@ -75,7 +75,7 @@ we have some builtin ignore options, and all of them are enabled by default:
 
 * `bin` : binary files
 * `common` : common files
-* `gitignore` : according to `.gitignore` under `getcwd()`
+* `gitignore` : according to `.gitignore` under `getcwd()` and all parent dir
 * `hidden` : hidden files
 * `media` : common media files
 
@@ -151,4 +151,33 @@ let ignore = ZFIgnoreGet()
     to resolve this, try use a temp file to store exclude pattern, for example
 
     * use `--exclude-from` (for GNU `grep` only)
+
+
+* Q: files or dirs are accidently ignored, how to "ignore" some of ignore?
+
+    A: you may use `g:ZFIgnoreFilter` to filter the final ignore setting
+
+    ```
+    function! s:myFilter(ignore)
+        let i = len(a:ignore['dir']) - 1
+        while i >= 0
+            if a:ignore['dir'][i] == '.LfCache'
+                call add(a:ignore['dir_filtered'], remove(a:ignore['dir'], i))
+            endif
+            let i -= 1
+        endwhile
+    endfunction
+
+    if !exists('g:ZFIgnoreFilter')
+        let g:ZFIgnoreFilter = {}
+    endif
+    let g:ZFIgnoreFilter['yourModuleName'] = function('s:myFilter')
+    ```
+
+    by default, for safety, these items are automatically filtered:
+
+    * cwd and all of it's parent
+    * `~`
+    * special patterns like `.` or `*`
+    * `rtp` (`:h rtp`)
 
