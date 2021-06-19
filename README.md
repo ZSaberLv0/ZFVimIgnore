@@ -11,7 +11,7 @@ or [buy me a coffee](https://github.com/ZSaberLv0/ZSaberLv0)
 
 **NOTE** : this plugin would modify `wildignore` by default,
 which may affect `expand()` `glob()` functions,
-see #1 for more info
+see [#1](https://github.com/ZSaberLv0/ZFVimIgnore/issues/1) for more info
 
 
 1. Install
