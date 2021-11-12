@@ -22,7 +22,7 @@ function! ZFIgnore_filter_common(ignore)
     for item in split(substitute(getcwd(), '\\', '/', 'g'), '/')
         let filterMap[item] = 1
     endfor
-    if get(g:, 'ZFIgnore_filter_rtp', 0)
+    if get(g:, 'ZFIgnore_filter_rtp', 1)
         for rtp in split(&rtp, ',')
             for item in split(substitute(rtp, '\\', '/', 'g'), '/')
                 let filterMap[item] = 1
