@@ -31,13 +31,24 @@ function! ZFIgnore_filter_common(ignore)
     endif
 
     let filter = keys(filterMap)
-    for type in ['dir']
+    for type in ['file', 'dir']
         let i = len(a:ignore[type]) - 1
         while i >= 0
             let filterIndex = s:checkFilter(filter, a:ignore[type][i])
             if filterIndex >= 0
                 let pattern = remove(a:ignore[type], i)
                 let a:ignore[type . '_filtered'][pattern] = filter[filterIndex]
+            elseif 0
+                        \ || match(a:ignore[type][i], '\(^\|,\)\*\+,') >= 0 " (^|,)\*+,
+                        \ || match(a:ignore[type][i], ',\*\+\($\|,\)') >= 0 " ,\*+($|,)
+                " filter out:
+                "   xxx,*,yyy
+                "   xxx,*
+                "   *,yyy
+                " to prevent result to `aaa,xxx,*,yyy,bbb` for wildignore
+                " typically for typo of `xxx.*` to `xxx,*`
+                let pattern = remove(a:ignore[type], i)
+                let a:ignore[type . '_filtered'][pattern] = ',*,'
             endif
             let i -= 1
         endwhile
