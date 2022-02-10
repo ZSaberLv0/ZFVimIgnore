@@ -25,7 +25,7 @@ endif
 let g:ZFIgnoreData['ZFIgnore_ignore_common'] = {
             \   'common' : {
             \     'file' : {
-            \       '*.d' : 1,
+            \       '*.d' : 0,
             \       '*.depend*' : 1,
             \       '*.dex' : 1,
             \       '*.iml' : 1,
