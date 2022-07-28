@@ -33,6 +33,8 @@ function! ZFIgnoreLoadGitignore(option)
 endfunction
 
 " detectOption : {
+"   'pattern' : '\.gitignore', // pattern of gitignore file
+"   'path' : '', // find for specified path
 "   'cur' : 1, // find for getcwd()
 "   'parent' : 1, // find in all parents until find one
 "   'parentRecursive' : 1, // find in all parents even if found one
@@ -42,10 +44,18 @@ function! ZFIgnoreDetectGitignore(...)
     let detectOption = extend(
                 \ copy(get(g:, 'ZFIgnore_ignore_gitignore_detectOption', {})),
                 \ get(a:, 1, {}))
+    let pattern = get(detectOption, 'pattern', '')
+    if empty(pattern)
+        let pattern = '\.gitignore'
+    endif
     let pathList = []
 
+    if !empty(get(detectOption, 'path', ''))
+        call extend(pathList, split(globpath(detectOption['path'], pattern, 1)))
+    endif
+
     if get(detectOption, 'cur', 1)
-        call extend(pathList, split(globpath(getcwd(), '.gitignore', 1)))
+        call extend(pathList, split(globpath(getcwd(), pattern, 1)))
     endif
 
     if get(detectOption, 'parentRecursive', 1)
@@ -58,7 +68,7 @@ function! ZFIgnoreDetectGitignore(...)
     let parentPrev = substitute(getcwd(), '\\', '/', 'g')
     let parentCur = fnamemodify(parentPrev, ':h')
     while detectParent != 0 && parentCur != parentPrev
-        call extend(pathList, split(globpath(parentCur, '.gitignore', 1)))
+        call extend(pathList, split(globpath(parentCur, pattern, 1)))
         if detectParent > 0
             let detectParent -= 1
         endif
@@ -70,7 +80,11 @@ function! ZFIgnoreDetectGitignore(...)
         call extend(pathList, split(globpath(getcwd(), '*/**/.gitignore', 1)))
     endif
 
-    return pathList
+    let pathMap = {}
+    for path in pathList
+        let pathMap[path] = 1
+    endfor
+    return keys(pathMap)
 endfunction
 
 function! ZFIgnoreParseGitignore(ignoreData, gitignoreFilePath)
