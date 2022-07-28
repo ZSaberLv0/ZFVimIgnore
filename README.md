@@ -186,3 +186,5 @@ let ignore = ZFIgnoreGet()
     * special patterns like `.` or `*`
     * `rtp` (`:h rtp`)
 
+    also, consider use the `nosuf` argument for `expand()` `glob()` and similar functions
+
