@@ -77,6 +77,19 @@ function! ZFIgnoreGet(...)
     return ret
 endfunction
 
+function! ZFIgnoreGetNoCache(...)
+    let option = get(a:, 1, {})
+
+    doautocmd User ZFIgnoreOnSetup
+    let ret = s:ZFIgnoreGet(option)
+    for module in keys(g:ZFIgnoreFilter)
+        let Fn = g:ZFIgnoreFilter[module]
+        call Fn(ret)
+    endfor
+
+    return ret
+endfunction
+
 " return: [
 "   '*.xxx',
 "   '*/xxx/*',
