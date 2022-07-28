@@ -64,11 +64,7 @@ function! ZFIgnoreGet(...)
     endif
 
     doautocmd User ZFIgnoreOnSetup
-    let ret = s:ZFIgnoreGet(option)
-    for module in keys(g:ZFIgnoreFilter)
-        let Fn = g:ZFIgnoreFilter[module]
-        call Fn(ret)
-    endfor
+    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option))
 
     if !exists('s:ZFIgnoreCache')
         let s:ZFIgnoreCache = {}
@@ -81,13 +77,17 @@ function! ZFIgnoreGetNoCache(...)
     let option = get(a:, 1, {})
 
     doautocmd User ZFIgnoreOnSetup
-    let ret = s:ZFIgnoreGet(option)
-    for module in keys(g:ZFIgnoreFilter)
-        let Fn = g:ZFIgnoreFilter[module]
-        call Fn(ret)
-    endfor
+    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option))
 
     return ret
+endfunction
+
+function! ZFIgnoreFilterApply(ignore)
+    for module in keys(g:ZFIgnoreFilter)
+        let Fn = g:ZFIgnoreFilter[module]
+        call Fn(a:ignore)
+    endfor
+    return a:ignore
 endfunction
 
 " return: [
