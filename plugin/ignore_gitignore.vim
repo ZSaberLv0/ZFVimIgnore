@@ -34,11 +34,11 @@ endfunction
 
 " detectOption : {
 "   'pattern' : '\.gitignore', // pattern of gitignore file
-"   'path' : '', // find for specified path
+"   'path' : '', // find for specified path, can be string or list
 "   'cur' : 1, // find for getcwd()
 "   'parent' : 1, // find in all parents until find one
 "   'parentRecursive' : 1, // find in all parents even if found one
-"   'childRecursive' : 0, // find in all child dirs, maybe very slow
+"   'callback' : function(), // func that return a list of gitignore file
 " }
 function! ZFIgnoreDetectGitignore(...)
     let detectOption = extend(
@@ -51,7 +51,13 @@ function! ZFIgnoreDetectGitignore(...)
     let pathList = []
 
     if !empty(get(detectOption, 'path', ''))
-        call extend(pathList, split(globpath(detectOption['path'], pattern, 1)))
+        if type(detectOption['path']) == type('')
+            call extend(pathList, split(globpath(detectOption['path'], pattern, 1)))
+        elseif type(detectOption['path']) == type([])
+            for path in detectOption['path']
+                call extend(pathList, split(globpath(path, pattern, 1)))
+            endfor
+        endif
     endif
 
     if get(detectOption, 'cur', 1)
@@ -60,7 +66,7 @@ function! ZFIgnoreDetectGitignore(...)
 
     if get(detectOption, 'parentRecursive', 1)
         let detectParent = -1
-    elseif get(detectOption, 'parentRecursive', 1)
+    elseif get(detectOption, 'parent', 1)
         let detectParent = empty(pathList) ? 1 : 0
     else
         let detectParent = 0
@@ -76,8 +82,9 @@ function! ZFIgnoreDetectGitignore(...)
         let parentCur = fnamemodify(parentPrev, ':h')
     endwhile
 
-    if get(detectOption, 'childRecursive', 0)
-        call extend(pathList, split(globpath(getcwd(), '*/**/.gitignore', 1)))
+    let Fn_callback = get(detectOption, 'callback', '')
+    if !empty(Fn_callback)
+        call extend(Fn_callback)
     endif
 
     let pathMap = {}

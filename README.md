@@ -78,11 +78,25 @@ let g:NERDTreeIgnore = ZFIgnoreToRegexp(ZFIgnoreGet({
 
 we have some builtin ignore options, and all of them are enabled by default:
 
-* `bin` : binary files
-* `common` : common files
+* `bin` : binary files (`*.dll`, `*.so`, etc) and `bin` dir
+* `common` : common files (swap file, build cache, etc)
 * `gitignore` : according to `.gitignore` under `getcwd()` and all parent dir
-* `hidden` : hidden files
-* `media` : common media files
+
+    * the default `.gitignore` detect option can be specified by:
+
+        ```
+        let g:ZFIgnore_ignore_gitignore_detectOption = {
+                \   'pattern' : '\.gitignore', // pattern of gitignore file
+                \   'path' : '', // find for specified path, can be string or list
+                \   'cur' : 1, // find for getcwd()
+                \   'parent' : 1, // find in all parents until find one
+                \   'parentRecursive' : 1, // find in all parents even if found one
+                \   'callback' : function(), // func that return a list of gitignore file
+                \ }
+        ```
+
+* `hidden` : hidden files (`*~`, `~*`)
+* `media` : common media files (`*.avi`, `*.jpg`, etc)
 
 all currently registered option can be checked and modified by `g:ZFIgnoreOptionDefault`
 
