@@ -95,7 +95,7 @@ we have some builtin ignore options, and all of them are enabled by default:
                 \ }
         ```
 
-* `hidden` : hidden files (`*~`, `~*`)
+* `hidden` : hidden files (`.*`, `*?~`, `~?*`)
 * `media` : common media files (`*.avi`, `*.jpg`, etc)
 
 all currently registered option can be checked and modified by `g:ZFIgnoreOptionDefault`
