@@ -40,6 +40,7 @@ endfunction
 "   'parentRecursive' : 1, // find in all parents even if found one
 "   'callback' : function(), // func that return a list of gitignore file
 " }
+" return a list of abs path
 function! ZFIgnoreDetectGitignore(...)
     let detectOption = extend(
                 \ copy(get(g:, 'ZFIgnore_ignore_gitignore_detectOption', {})),

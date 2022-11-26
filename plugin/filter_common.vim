@@ -37,7 +37,7 @@ function! ZFIgnore_filter_common(ignore)
             let filterIndex = s:checkFilter(filter, a:ignore[type][i])
             if filterIndex >= 0
                 let pattern = remove(a:ignore[type], i)
-                let a:ignore[type . '_filtered'][pattern] = filter[filterIndex]
+                call add(a:ignore[type . '_filtered'], pattern)
             elseif 0
                         \ || match(a:ignore[type][i], '\(^\|,\)\*\+,') >= 0 " (^|,)\*+,
                         \ || match(a:ignore[type][i], ',\*\+\($\|,\)') >= 0 " ,\*+($|,)
@@ -48,7 +48,7 @@ function! ZFIgnore_filter_common(ignore)
                 " to prevent result to `aaa,xxx,*,yyy,bbb` for wildignore
                 " typically for typo of `xxx.*` to `xxx,*`
                 let pattern = remove(a:ignore[type], i)
-                let a:ignore[type . '_filtered'][pattern] = ',*,'
+                call add(a:ignore[type . '_filtered'], pattern)
             endif
             let i -= 1
         endwhile
