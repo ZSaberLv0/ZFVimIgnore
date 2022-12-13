@@ -97,19 +97,34 @@ endfunction
 
 function! ZFIgnoreParseGitignore(ignoreData, gitignoreFilePath)
     for pattern in readfile(substitute(a:gitignoreFilePath, '\\', '/', 'g'))
+        " comments `# xxx`
         if match(pattern, '^[ \t]*#') >= 0
-                    \ || match(pattern, '^[ \t]*!') >= 0
             continue
         endif
 
-        " comments: `# xxx`
-        let pattern = substitute(pattern, '^[ \t]*#.*', '', 'g')
+        " explicit include not supported `!xxx`
+        if match(pattern, '^[ \t]*!') >= 0
+            continue
+        endif
 
-        " head or tail spaces
-        let pattern = substitute(pattern, '^[ \t]+', '', 'g')
-        let pattern = substitute(pattern, '[ \t]+$', '', 'g')
+        " wild card not supported
+        "   `aa/*/bb`
+        "   `aa/**/bb`
+        if match(pattern, '/[\*]\+/') >= 0
+            continue
+        endif
 
-        " no abs path support
+        " complex regex not supported
+        "   `(xxx)`
+        if match(pattern, '[()]') >= 0
+            continue
+        endif
+
+        " strip head or tail spaces
+        let pattern = substitute(pattern, '^[ \t]\+', '', 'g')
+        let pattern = substitute(pattern, '[ \t]\+$', '', 'g')
+
+        " no abs path support, change to relative
         "   `*/path/abc` => `path/abc`
         "   `/path/abc` => `path/abc`
         let pattern = substitute(pattern, '^\**\/\+', '', 'g')
@@ -119,7 +134,9 @@ function! ZFIgnoreParseGitignore(ignoreData, gitignoreFilePath)
         endif
 
         if match(pattern, '/\+\**$') >= 0
-            " explicit dir, `path/` or `path/*`
+            " explicit dir
+            "   `path/` => `path`
+            "   `path/*` => `path`
             let pattern = substitute(pattern, '/\+\**$', '', 'g')
             if !empty(pattern)
                 let a:ignoreData['dir'][pattern] = 1
