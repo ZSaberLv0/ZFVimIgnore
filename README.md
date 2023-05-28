@@ -190,7 +190,22 @@ let ignore = ZFIgnoreGet()
     if !exists('g:ZFIgnoreFilter')
         let g:ZFIgnoreFilter = {}
     endif
-    let g:ZFIgnoreFilter['yourModuleName'] = function('s:myFilter')
+    let g:ZFIgnoreFilter['yourModuleName1'] = function('s:myFilter')
+    let g:ZFIgnoreFilter['yourModuleName2'] = {
+            \   'YourImplName' : {
+            \     'file' : {
+            \       '*.mp3' : 1,
+            \       ...
+            \     },
+            \     'dir' : {
+            \       '.LfCache' : 1,
+            \       ...
+            \     },
+            \   },
+            \   'OtherImplName' : {
+            \     ...
+            \   },
+            \ }
     ```
 
     by default, for safety, these items are automatically filtered:

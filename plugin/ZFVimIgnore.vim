@@ -33,13 +33,34 @@ if !exists('g:ZFIgnoreOptionDefault')
 endif
 
 " {
-"   'module' : 'function(ignore)', // function to modify final ignore settings
-"                                  // ignore: {
-"                                  //   'file' : [],
-"                                  //   'dir' : [],
-"                                  //   'file_filtered' : [],
-"                                  //   'dir_filtered' : [],
-"                                  // }
+"   // function to modify final ignore settings
+"   // ignore: {
+"   //   'file' : [],
+"   //   'dir' : [],
+"   //   'file_filtered' : [],
+"   //   'dir_filtered' : [],
+"   // }
+"   'module1' : 'function(ignore)',
+"
+"   // or, supply pattern for each module
+"   // when filter pattern matches, ignore rule would be filtered
+"   //
+"   // for example, assume you have `*.mp3` and `*.mp4` as ignore pattern,
+"   // you may supply `*.mp?` to filter out the two ignore pattern
+"   'module2' : {
+"     'module_xxx' : {
+"       'file' : {
+"         'pattern1' : 1,
+"         'pattern2' : 0,
+"         ...
+"       },
+"       'dir' : {
+"         'pattern1' : 1,
+"         'pattern2' : 0,
+"         ...
+"       },
+"     },
+"   },
 " }
 if !exists('g:ZFIgnoreFilter')
     let g:ZFIgnoreFilter = {}
@@ -64,7 +85,7 @@ function! ZFIgnoreGet(...)
     endif
 
     doautocmd User ZFIgnoreOnSetup
-    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option))
+    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option), option)
 
     if !exists('s:ZFIgnoreCache')
         let s:ZFIgnoreCache = {}
@@ -77,15 +98,43 @@ function! ZFIgnoreGetNoCache(...)
     let option = get(a:, 1, {})
 
     doautocmd User ZFIgnoreOnSetup
-    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option))
+    let ret = ZFIgnoreFilterApply(s:ZFIgnoreGet(option), option)
 
     return ret
 endfunction
 
-function! ZFIgnoreFilterApply(ignore)
+function! ZFIgnoreFilterApply(ignore, ...)
+    let option = extend(copy(g:ZFIgnoreOptionDefault), get(a:, 1, {}))
     for module in keys(g:ZFIgnoreFilter)
         let Fn = g:ZFIgnoreFilter[module]
-        call Fn(a:ignore)
+        if type(Fn) == type(function('function'))
+            call Fn(a:ignore)
+        else
+            for filterModuleName in keys(Fn)
+                if !get(option, filterModuleName, 1)
+                    continue
+                endif
+                let filterModule = Fn[filterModuleName]
+                for type in ['file', 'dir']
+                    let i = len(a:ignore[type]) - 1
+                    let filterPatterns = get(filterModule, type, {})
+                    while i >= 0
+                        let pattern = a:ignore[type][i]
+                        for filterPattern in keys(filterPatterns)
+                            if filterPatterns[filterPattern]
+                                if match(pattern, ZFIgnorePatternToRegexp(filterPattern)) >= 0
+                                    call remove(a:ignore[type], i)
+                                    call add(a:ignore[type . '_filtered'], pattern)
+                                    break
+                                endif
+                            endif
+                        endfor
+
+                        let i -= 1
+                    endwhile
+                endfor
+            endfor
+        endif
     endfor
     return a:ignore
 endfunction
