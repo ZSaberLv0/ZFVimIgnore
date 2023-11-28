@@ -237,6 +237,75 @@ function! ZFIgnoreToggle()
 endfunction
 command! -nargs=0 ZFIgnoreToggle :call ZFIgnoreToggle() | echo '[ZFIgnore] ' . (g:ZFIgnoreOn ? 'on' : 'off')
 
+" param: {
+"   'option' : {...}, // optional, ZFIgnoreGet option
+"   'ignoreData' : {...}, // optional, use specified ignoreData
+"   'fileRuleOnDir' : 1, // optional, whether apply 'file' rules on dir
+" }
+" return: {
+"   'type' : 'file / dir', // what type of the rule matched
+"   'rule' : 'some_ignore_rule', // what ignore rule matched
+"   'filtered' : 'some_text', // what part of the text matched the rule
+"   'text' : 'some_text', // original text used to match
+" }
+function! ZFIgnoreCheck(text, ...)
+    let param = get(a:, 1, {})
+
+    let ignoreData = get(param, 'ignoreData', {})
+    if empty(ignoreData)
+        let ignoreData = ZFIgnoreGet(get(param, 'option', {}))
+    endif
+    let text = fnamemodify(a:text, ':p')
+
+    let filePath = fnamemodify(text, ':h')
+    let filePath = substitute(filePath, '\', '/', 'g')
+    let filePath = substitute(filePath, '//', '/', 'g')
+    for filePathItem in split(filePath, '/')
+        for item in ignoreData['dir']
+            let pattern = ZFIgnorePatternToRegexp(item)
+            if match(filePathItem, pattern) >= 0
+                return {
+                            \   'type' : 'dir',
+                            \   'rule' : item,
+                            \   'filtered' : filePathItem,
+                            \   'text' : text,
+                            \ }
+            endif
+        endfor
+        for item in ignoreData['file']
+            let pattern = ZFIgnorePatternToRegexp(item)
+            if match(filePathItem, pattern) >= 0
+                return {
+                            \   'type' : 'file',
+                            \   'rule' : item,
+                            \   'filtered' : filePathItem,
+                            \   'text' : text,
+                            \ }
+            endif
+        endfor
+    endfor
+
+    let fileName = fnamemodify(text, ':t')
+    for item in ignoreData['file']
+        let pattern = ZFIgnorePatternToRegexp(item)
+        if match(fileName, pattern) >= 0
+            return {
+                        \   'type' : 'file',
+                        \   'rule' : item,
+                        \   'filtered' : fileName,
+                        \   'text' : text,
+                        \ }
+        endif
+    endfor
+
+    return {
+                \   'type' : '',
+                \   'rule' : '',
+                \   'filtered' : '',
+                \   'text' : text,
+                \ }
+endfunction
+
 " ============================================================
 function! s:ZFIgnoreGet(option)
     if !g:ZFIgnoreOn

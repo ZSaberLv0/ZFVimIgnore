@@ -217,3 +217,22 @@ let ignore = ZFIgnoreGet()
 
     also, consider use the `nosuf` argument for `expand()` `glob()` and similar functions
 
+
+* Q: how to check what pattern has matched?
+
+    A: you may use `ZFIgnoreCheck(text, ...)` to check matched rules
+
+    ```
+    " param: {
+    "   'option' : {...}, // optional, ZFIgnoreGet option
+    "   'ignoreData' : {...}, // optional, use specified ignoreData
+    "   'fileRuleOnDir' : 1, // optional, whether apply 'file' rules on dir
+    " }
+    " return: {
+    "   'type' : 'file / dir', // what type of the rule matched
+    "   'rule' : 'some_ignore_rule', // what ignore rule matched
+    "   'filtered' : 'some_text', // what part of the text matched the rule
+    "   'text' : 'some_text', // original text used to match
+    " }
+    ```
+
