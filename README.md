@@ -6,13 +6,17 @@ util to make `wildignore` and similars more friendly and easier to config
 if you like my work, [check here](https://github.com/ZSaberLv0?utf8=%E2%9C%93&tab=repositories&q=ZFVim) for a list of my vim plugins,
 or [buy me a coffee](https://github.com/ZSaberLv0/ZSaberLv0)
 
+---
 
-# Usage
-
-**NOTE** : this plugin would modify `wildignore` by default,
-which may affect `expand()` `glob()` functions,
+**NOTE:
+by default, this plugin would recognize `.gitignore` and modify `wildignore`,
+which may affect `expand()` `glob()` functions**
 see [#1](https://github.com/ZSaberLv0/ZFVimIgnore/issues/1) for more info
 
+---
+
+
+# Usage
 
 1. Install
 
