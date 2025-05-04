@@ -123,7 +123,7 @@ function! ZFIgnoreFilterApply(ignore, ...)
     for module in keys(g:ZFIgnoreFilter)
         let Fn = g:ZFIgnoreFilter[module]
         if type(Fn) == type(function('function'))
-            let tmp = Fn(a:ignore)
+            let tmp = Fn(a:ignore, option)
             call extend(ret['file_filters'], tmp['file_filters'])
             call extend(ret['dir_filters'], tmp['dir_filters'])
         else
